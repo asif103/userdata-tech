@@ -1,15 +1,40 @@
-import React from 'react'
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function Header({header}) {
-    return (
-        <thead>
-            <tr>
-                {
-                    header.map(head => (<th key={head.field}>{head.name}</th>))
-                }
-            </tr>
-        </thead>
-    )
-}
+const Header = ({ headers, onSorting }) => {
+  const [sortingField, setSortingField] = useState("");
+  const [sortingOrder, setSortingOrder] = useState("asc");
 
-export default Header
+  const onSortingChange = (field) => {
+    const order =
+      field === sortingField && sortingOrder === "asc" ? "desc" : "asc";
+
+    setSortingField(field);
+    setSortingOrder(order);
+    onSorting(field, order);
+  };
+
+  return (
+    <thead>
+      <tr>
+        {headers.map(({ name, field, sortable }) => (
+          <th
+            key={name}
+            onClick={() => (sortable ? onSortingChange(field) : null)}
+          >
+            {name}
+
+            {sortingField && sortingField === field && (
+              <p
+                className="badge badge-success"
+                icon={sortingOrder === "asc" ? "asc" : "desc"}
+              />
+            )}
+          </th>
+        ))}
+      </tr>
+    </thead>
+  );
+};
+
+export default Header;

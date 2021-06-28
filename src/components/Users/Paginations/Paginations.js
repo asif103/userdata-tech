@@ -1,33 +1,51 @@
-import React, { useMemo, useState, useEffect } from 'react'
-import { Pagination } from 'react-bootstrap'
+import React, { useMemo, useState, useEffect } from "react";
+import { Pagination } from "react-bootstrap";
 
+function Paginations({
+  total = 0,
+  itemsPerPage = 10,
+  currentPage = 1,
+  onPageChange,
+}) {
+  const [totalPages, setTotalPages] = useState(0);
 
-function Paginations({total=0, itemsPerPage=3, currentPage=1, onPageChange}) {
-    const [totalPage, setTotalPage] = useState(0)
-    useEffect(()=>{
-        if(total > 0 && itemsPerPage > 0)
-        setTotalPage(Math.ceil(total/itemsPerPage));
-    }, [total, itemsPerPage])
+  useEffect(() => {
+    if (total > 0 && itemsPerPage > 0)
+      setTotalPages(Math.ceil(total / itemsPerPage));
+  }, [total, itemsPerPage]);
 
-    const paginationItems = useMemo(()=>{
+  const paginationItems = useMemo(() => {
     const pages = [];
 
-    for(let i = 1; i<= totalPage; i++){
-        pages.push(<Pagination.Item key={i} active={i===currentPage} onClick={()=> onPageChange(i)}>
-            {i}
-        </Pagination.Item>);
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(
+        <Pagination.Item
+          key={i}
+          active={i === currentPage}
+          onClick={() => onPageChange(i)}
+        >
+          {i}
+        </Pagination.Item>
+      );
     }
-    return pages;
-    }, [totalPage, currentPage]);
-    if(totalPage === 0) return null;
-    return (
-        <Pagination>
-            <Pagination.Prev onCLick={ ()=> onPageChange(currentPage -1 )} disabled={currentPage ===1} />
-                {paginationItems}
-            <Pagination.Next onCLick={ ()=> onPageChange(currentPage +1 )} disabled={currentPage ===totalPage} />
 
-        </Pagination>
-    )
+    return pages;
+  }, [totalPages, currentPage]);
+
+  if (totalPages === 0) return null;
+  return (
+    <Pagination>
+      <Pagination.Prev
+        onCLick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      />
+      {paginationItems}
+      <Pagination.Next
+        onCLick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      />
+    </Pagination>
+  );
 }
 
-export default Paginations
+export default Paginations;
