@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Header = ({ headers, onSorting }) => {
   const [sortingField, setSortingField] = useState("");
@@ -25,10 +24,7 @@ const Header = ({ headers, onSorting }) => {
             {name}
 
             {sortingField && sortingField === field && (
-              <p
-                className="badge badge-success"
-                icon={sortingOrder === "asc" ? "asc" : "desc"}
-              />
+              <p className="badge badge-success">{sortingOrder === "asc" ? "asc" : "desc"}</p>
             )}
           </th>
         ))}

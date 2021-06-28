@@ -9,6 +9,7 @@ function Users() {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [sorting, setSorting] = useState({ field: "", order: "" });
+  const [totalUserCount, setTotalUserCount] = useState(localStorage.getItem("items") || 3)
 
   const ITEMS_PER_PAGE = 3;
   useEffect(() => {
@@ -21,6 +22,12 @@ function Users() {
     { name: "Email", field: "email", sortable: true },
     { name: "Website", field: "website", sortable: true },
   ];
+  const setTotalUserItem = (items) => {
+    setTotalUserCount(items);
+    localStorage.setItem("items", items);
+    setTotalUserCount(localStorage.getItem("items"));
+    console.log(totalUserCount)
+  };
 
   const history = useHistory();
   const singleUser = (user) => {
@@ -31,9 +38,9 @@ function Users() {
 
     if (search) {
       computedUsers = computedUsers.filter(
-        (comment) =>
-          comment.name.toLowerCase().includes(search.toLowerCase()) ||
-          comment.email.toLowerCase().includes(search.toLowerCase())
+        (user) =>
+          user.name.toLowerCase().includes(search.toLowerCase()) ||
+          user.email.toLowerCase().includes(search.toLowerCase())
       );
     }
 
@@ -48,25 +55,40 @@ function Users() {
     }
 
     //Current Page slice
-    return computedUsers.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-    );
-  }, [users, currentPage, search, sorting]);
+    return computedUsers.slice(0, totalUserCount);
+  }, [users, currentPage, search, sorting, totalUserCount]);
   return (
     <div>
-      <Paginations
+      {/* <Paginations
         total={totalItems}
         itemsPerPage={ITEMS_PER_PAGE}
         currentPage={currentPage}
         onPageChange={(page) => setCurrentPage(page)}
-      ></Paginations>
+      ></Paginations> */}
       <Search
         onSearch={(value) => {
           setSearch(value);
           setCurrentPage(1);
         }}
       />
+      <button
+        onClick={() => setTotalUserItem(3)}
+        className="badge badge-info ml-3 text-white"
+      >
+        3
+      </button>
+      <button
+        onClick={() => setTotalUserItem(5)}
+        className="badge badge-info ml-3 text-white"
+      >
+        5
+      </button>
+      <button
+        onClick={() => setTotalUserItem(users.length)}
+        className="badge badge-info ml-3 text-white"
+      >
+        All
+      </button>
       <table className="table">
         <Header
           headers={header}
